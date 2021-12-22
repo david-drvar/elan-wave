@@ -13,58 +13,57 @@ namespace Library.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class BooksController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IBookService bookService;
 
-        public UsersController(IUserService userService)
+        public BooksController(IBookService bookService)
         {
-            this.userService = userService;
+            this.bookService = bookService;
         }
 
-        // GET: api/Users
+        // GET: api/Books
         [HttpGet]
-        public IActionResult GetUser()
+        public IActionResult GetBook()
         {
-            return Ok(userService.GetAll());
+            return Ok(bookService.GetAll());
         }
 
-        // GET: api/Users/5
+        // GET: api/Books/5
         [HttpGet("{id}")]
-        public IActionResult GetUser(int id)
+        public IActionResult GetBook(int id)
         {
-            return Ok(userService.GetById(id));
-
+            return Ok(bookService.GetById(id));
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Books/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public IActionResult PutUser([FromBody] User user)
+        public IActionResult PutBook([FromBody] Book book)
         {
-            return Ok(userService.Update(user));
+            return Ok(bookService.Update(book));
         }
 
-        // POST: api/Users
+        // POST: api/Books
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public IActionResult PostUser([FromBody] User user)
+        public IActionResult PostBook([FromBody] Book book)
         {
-            return Ok(userService.Insert(user));
+            return Ok(bookService.Insert(book));
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/Books/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser([FromBody] User user)
+        public IActionResult DeleteBook([FromBody] Book book)
         {
-            return Ok(userService.Delete(user));
+            return Ok(bookService.Delete(book));
         }
 
-        //private bool UserExists(int id)
+        //private bool BookExists(int id)
         //{
-        //    return _context.User.Any(e => e.UserAccountID == id);
+        //    return _context.Book.Any(e => e.BookId == id);
         //}
     }
 }

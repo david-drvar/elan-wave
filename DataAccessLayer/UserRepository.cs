@@ -15,17 +15,20 @@ namespace DataAccessLayer
         }
         public User Delete(User entity)
         {
-            throw new NotImplementedException();
+            entity.IsDeleted = true;
+            _myDbContext.User.Update(entity);
+            _myDbContext.SaveChanges();
+            return entity;
         }
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _myDbContext.User;
         }
 
         public User GetById(int Id)
         {
-            throw new NotImplementedException();
+            return _myDbContext.User.Find(Id);
         }
 
         public User Insert(User entity)

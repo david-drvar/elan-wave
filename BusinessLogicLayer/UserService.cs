@@ -17,27 +17,27 @@ namespace BusinessLogicLayer
 
         public User Delete(User entity)
         {
-            throw new NotImplementedException();
+            return userRepository.Delete(entity);
         }
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return userRepository.GetAll();
         }
 
         public User GetById(int Id)
         {
-            throw new NotImplementedException();
+            return userRepository.GetById(Id);
         }
 
         public User Insert(User entity)
         {
-            throw new NotImplementedException();
+            return userRepository.Insert(entity);
         }
 
         public User Update(User entity)
         {
-            throw new NotImplementedException();
+            return userRepository.Update(entity);
         }
     }
 }

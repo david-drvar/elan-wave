@@ -17,27 +17,34 @@ namespace DataAccessLayer
 
         public Book Delete(Book entity)
         {
-            throw new NotImplementedException();
+            entity.IsDeleted = true;
+            _myDbContext.Book.Update(entity);
+            _myDbContext.SaveChanges();
+            return entity;
         }
 
         public IEnumerable<Book> GetAll()
         {
-            throw new NotImplementedException();
+            return _myDbContext.Book;
         }
 
         public Book GetById(int Id)
         {
-            throw new NotImplementedException();
+            return _myDbContext.Book.Find(Id);
         }
 
         public Book Insert(Book entity)
         {
-            throw new NotImplementedException();
+            var Book = _myDbContext.Book.Add(entity);
+            _myDbContext.SaveChanges();
+            return Book.Entity;
         }
 
         public Book Update(Book entity)
         {
-            throw new NotImplementedException();
+            _myDbContext.Book.Update(entity);
+            _myDbContext.SaveChanges();
+            return entity;
         }
     }
 }

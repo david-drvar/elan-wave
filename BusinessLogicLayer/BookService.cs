@@ -18,27 +18,27 @@ namespace BusinessLogicLayer
 
         public Book Delete(Book entity)
         {
-            throw new NotImplementedException();
+            return bookRepository.Delete(entity);
         }
 
         public IEnumerable<Book> GetAll()
         {
-            throw new NotImplementedException();
+            return bookRepository.GetAll();
         }
 
         public Book GetById(int Id)
         {
-            throw new NotImplementedException();
+            return bookRepository.GetById(Id);
         }
 
         public Book Insert(Book entity)
         {
-            throw new NotImplementedException();
+            return bookRepository.Insert(entity);
         }
 
         public Book Update(Book entity)
         {
-            throw new NotImplementedException();
+            return bookRepository.Update(entity);
         }
     }
 }
