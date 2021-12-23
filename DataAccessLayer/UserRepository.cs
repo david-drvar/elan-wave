@@ -33,6 +33,7 @@ namespace DataAccessLayer
 
         public User Insert(User entity)
         {
+            entity.UserAccountID = Guid.NewGuid().ToString();
             var User = _myDbContext.User.Add(entity);
             _myDbContext.SaveChanges();
             return User.Entity;

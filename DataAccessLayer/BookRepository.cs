@@ -35,6 +35,7 @@ namespace DataAccessLayer
 
         public Book Insert(Book entity)
         {
+            entity.BookId = Guid.NewGuid().ToString();
             var Book = _myDbContext.Book.Add(entity);
             _myDbContext.SaveChanges();
             return Book.Entity;

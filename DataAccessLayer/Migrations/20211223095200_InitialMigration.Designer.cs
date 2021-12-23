@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20211221165552_InitialDBCreation")]
-    partial class InitialDBCreation
+    [Migration("20211223095200_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,17 +45,18 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("Models.User", b =>
                 {
-                    b.Property<int>("UserAccountID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserAccountID")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("varchar(45)");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("varchar(45)");
 
                     b.HasKey("UserAccountID");
