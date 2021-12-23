@@ -39,6 +39,8 @@ namespace Models
 
         public Book(string bookId, string isbn, string title, string author, string genre, bool isDeleted)
         {
+            if (bookId == "" || isbn == "" || title == "" || author == "" || genre == "")
+                throw new Exception();
             this.BookId = bookId;
             this.ISBN = isbn;
             this.Title = title;

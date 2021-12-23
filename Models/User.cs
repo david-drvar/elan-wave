@@ -29,6 +29,8 @@ namespace Models
 
         public User(string userAccontId, string username, string password, bool isDeleted)
         {
+            if (username == "" || password == "" || userAccontId == "")
+                throw new Exception();
             this.UserAccountID = userAccontId;
             this.Username = username;
             this.Password = password;

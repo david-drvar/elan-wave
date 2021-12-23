@@ -2,6 +2,7 @@
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataAccessLayer
 {
@@ -19,6 +20,11 @@ namespace DataAccessLayer
             _myDbContext.User.Update(entity);
             _myDbContext.SaveChanges();
             return entity;
+        }
+
+        public User FindByUsername(string username)
+        {
+            return _myDbContext.User.Where(user => user.Username == username && user.IsDeleted == false).FirstOrDefault();
         }
 
         public IEnumerable<User> GetAll()

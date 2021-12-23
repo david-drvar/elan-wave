@@ -26,7 +26,7 @@ namespace Library.Controllers
         [HttpGet]
         public IActionResult GetUser()
         {
-            // userService.Insert(new Models.User("bla", "guid proba", "grasas", false));
+            userService.Insert(new Models.User("bla", "", "", false));
             return Ok(userService.GetAll());
         }
 

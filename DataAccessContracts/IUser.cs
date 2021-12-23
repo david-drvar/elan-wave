@@ -7,5 +7,6 @@ namespace DataAccessContracts
 {
     public interface IUser : ICrud<User, int>
     {
+        public User FindByUsername(string username);
     }
 }

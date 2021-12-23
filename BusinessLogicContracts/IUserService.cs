@@ -7,5 +7,7 @@ namespace BusinessLogicContracts
 {
     public interface IUserService : IService<User, int>
     {
+        public User FindByUsername(string username);
+
     }
 }

@@ -20,6 +20,11 @@ namespace BusinessLogicLayer
             return userRepository.Delete(entity);
         }
 
+        public User FindByUsername(string username)
+        {
+            return userRepository.FindByUsername(username);
+        }
+
         public IEnumerable<User> GetAll()
         {
             return userRepository.GetAll();
@@ -32,6 +37,9 @@ namespace BusinessLogicLayer
 
         public User Insert(User entity)
         {
+            User user = this.FindByUsername(entity.Username);
+            if (user != null)
+                throw new Exception();
             return userRepository.Insert(entity);
         }
 
