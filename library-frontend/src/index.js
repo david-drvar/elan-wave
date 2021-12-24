@@ -2,16 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import Provider from "react-redux/lib/components/Provider";
+import { PersistGate } from 'redux-persist/integration/react'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import "react-bootstrap";
+
+import configureStore from './store'
+const { store, persistor } = configureStore();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <ToastContainer className="toast" toastClassName="toast-wrapper" bodyClassName="toast-body" />
+            <App/>
+        </PersistGate>
+    </Provider>,
+    document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
