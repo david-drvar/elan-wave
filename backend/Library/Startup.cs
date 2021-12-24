@@ -23,6 +23,8 @@ namespace Library
         }
 
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,6 +38,15 @@ namespace Library
 
             services.AddDbContext<MyDbContext>();
             //services.AddRazorPages();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                  });
+            });
 
             services.AddControllers();
         }
@@ -56,6 +67,9 @@ namespace Library
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseCors(MyAllowSpecificOrigins);
+
 
             app.UseRouting();
 
