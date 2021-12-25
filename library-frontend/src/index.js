@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import './index.css';
 import App from './App';
-import Provider from "react-redux/lib/components/Provider";
+import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +11,7 @@ import "react-bootstrap";
 import configureStore from './store'
 const { store, persistor } = configureStore();
 
+// Add ToastContainer
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -19,5 +19,4 @@ ReactDOM.render(
             <App/>
         </PersistGate>
     </Provider>,
-    document.getElementById('root')
-);
+    document.getElementById('root'))

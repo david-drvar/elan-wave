@@ -1,13 +1,15 @@
 import React, {Component, useEffect, useState} from 'react';
 import {Button, FormControl, Modal} from "react-bootstrap";
 import PasswordStrengthBar from 'react-password-strength-bar';
-import userService from "../src/services/users.service"
-import toastService from "../src/services/toast.service"
+import userService from "../services/users.service"
+import toastService from "../services/toast.service"
 import {useHistory} from "react-router-dom";
 import {toast} from "react-toastify";
-import Registration from "./components/Registration";
-import Footer from "./components/Footer";
-import authenticationService from "./services/authentification.service";
+import Registration from "../components/Registration";
+import Footer from "../components/Footer";
+import authenticationService from "../services/authentification.service";
+import {userActions} from "../store/actions/user.actions";
+import { useDispatch, useSelector } from 'react-redux'
 
 
 const Home = () =>  {
@@ -16,6 +18,8 @@ const Home = () =>  {
     const history = useHistory();
 
     const [show, setShow] = useState(false);
+    const dispatch = useDispatch();
+    const store = useSelector(state => state)
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -29,6 +33,13 @@ const Home = () =>  {
             toastService.show("success", "Successfully logged in!")
             //setDisabled(!disabled);
             //todo dispatch store
+            console.log("LOGIN RESPONSE")
+            console.log(response.data)
+            dispatch(userActions.loginRequest({
+                jwt: response.data.token,
+                id: response.data.id,
+                username: response.data.username
+            }));
             history.push({pathname: '/library'})
         } else {
             toastService.show("error", "Username must be unique! Try again")
