@@ -1,6 +1,7 @@
 ﻿using BusinessLogicContracts;
 using DataAccessContracts;
 using Models;
+using Models.DTOs;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,11 @@ namespace BusinessLogicLayer
         public User GetById(int Id)
         {
             return userRepository.GetById(Id);
+        }
+
+        public User GetByUsernameAndPassword(UsernamePasswordDTO dto)
+        {
+            return userRepository.GetByUsernameAndPassword(dto);
         }
 
         public User Insert(User entity)

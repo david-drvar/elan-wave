@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using Models;
 using BusinessLogicContracts;
+using Models.DTOs;
 
 namespace Library.Controllers
 {
@@ -51,9 +52,15 @@ namespace Library.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public IActionResult PostUser([FromBody] User user)
+        public IActionResult PostUser([FromBody] UsernamePasswordDTO dto)
         {
-            return Ok(userService.Insert(user));
+            return Ok(userService.Insert(new Models.User("", dto.Username, dto.Password, false)));
+        }
+
+        [HttpPost]
+        public IActionResult LoginUser([FromBody] UsernamePasswordDTO dto)
+        {
+            return Ok(userService.Insert(new Models.User("", dto.Username, dto.Password, false)));
         }
 
         // DELETE: api/Users/5

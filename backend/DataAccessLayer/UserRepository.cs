@@ -1,5 +1,6 @@
 ﻿using DataAccessContracts;
 using Models;
+using Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,14 @@ namespace DataAccessLayer
         public User GetById(int Id)
         {
             return _myDbContext.User.Find(Id);
+        }
+
+        public User GetByUsernameAndPassword(UsernamePasswordDTO dto)
+        {
+            User user =  _myDbContext.User.Where(user => user.Username == dto.Username && user.Password == dto.Password).FirstOrDefault();
+            if (user == null)
+                throw new Exception("User not found!");
+            return user;
         }
 
         public User Insert(User entity)
