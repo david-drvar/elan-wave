@@ -31,10 +31,6 @@ const Home = () =>  {
         })
         if (response.status === 200) {
             toastService.show("success", "Successfully logged in!")
-            //setDisabled(!disabled);
-            //todo dispatch store
-            console.log("LOGIN RESPONSE")
-            console.log(response.data)
             dispatch(userActions.loginRequest({
                 jwt: response.data.token,
                 id: response.data.id,
@@ -78,7 +74,6 @@ const Home = () =>  {
             <Modal
                 show={show}
                 onHide={handleClose}
-                style={{height : "6400px"}}
             >
                 <Modal.Header>
                     <Modal.Title>Sign up</Modal.Title>

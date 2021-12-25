@@ -31,7 +31,6 @@ const Registration = () => {
     }, [username,rePassword,password])
 
     async function submitForm (event) {
-
         event.preventDefault();
         const errors = ['password','rePassword', 'username'];
         if (validateForm(errors)) {
@@ -46,7 +45,6 @@ const Registration = () => {
         for(const Error of errors) {
             validationErrorMessage(createTarget(Error));
         }
-        //todo promeniti!
         if(passwordErr !== "" ||  rePasswordErr !== "" || usernameErr !== "" )
             return !valid;
         return valid;
@@ -57,8 +55,6 @@ const Registration = () => {
     }
 
     async function sendParams() {
-        //setBirthDate(new Date(birthDate));
-
         const response = await userService.registerUser({
             username: username,
             password: password
@@ -66,7 +62,6 @@ const Registration = () => {
         if (response.status === 200) {
             toastService.show("success", "Successfully registered!Please log-in.")
             setDisabled(!disabled);
-            //todo dispatch
             dispatch(userActions.loginRequest({
                 jwt: response.data.token,
                 id: response.data.id,

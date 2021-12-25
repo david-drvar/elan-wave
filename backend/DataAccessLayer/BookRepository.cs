@@ -21,7 +21,7 @@ namespace DataAccessLayer
             entity.IsDeleted = true;
             _myDbContext.Book.Update(entity);
             _myDbContext.SaveChanges();
-            return entity;
+             return entity;
         }
 
         public IEnumerable<Book> GetAll()

@@ -6,25 +6,55 @@ class BookService extends RootService {
     }
 
     async getBooks() {
-        const response = this.apiClient.get('').then(res => {
+        return this.apiClient.get('').then(res => {
             return res
         }).catch(err => {
             console.error(err)
             return err
         })
-        return response
     }
 
     async deleteBook(data) {
-        const response = this.apiClient.delete('', {
-            data : data
+        return this.apiClient.delete('', {
+            data: data
         }).then(res => {
             return res
         }).catch(err => {
             console.error(err)
             return err
         })
-        return response
+    }
+
+    async createBook(data) {
+        return this.apiClient.post('', {
+            Author: data.author,
+            Title: data.title,
+            Genre: data.genre,
+            ISBN: data.isbn,
+            BookId: "temp",
+            IsDeleted: false
+        }).then(res => {
+            return res
+        }).catch(err => {
+            console.error(err)
+            return err
+        })
+    }
+
+    async updateBook(data) {
+        return this.apiClient.put('', {
+            Author: data.author,
+            Title: data.title,
+            Genre: data.genre,
+            ISBN: data.isbn,
+            BookId: data.bookId,
+            IsDeleted: false
+        }).then(res => {
+            return res
+        }).catch(err => {
+            console.error(err)
+            return err
+        })
     }
 }
 

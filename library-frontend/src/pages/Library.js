@@ -1,22 +1,54 @@
 import React, {useEffect, useState} from 'react';
 import Footer from "../components/Footer";
-import {Button, Table} from "react-bootstrap";
+import {Button, FormControl, Modal, Table} from "react-bootstrap";
 import async from "async";
 import booksService from "../services/books.service";
 import toastService from "../services/toast.service";
 import {useDispatch, useSelector} from "react-redux";
 import {userActions} from "../store/actions/user.actions";
 import {useHistory} from "react-router-dom";
+import Registration from "../components/Registration";
+import PasswordStrengthBar from "react-password-strength-bar";
+import userService from "../services/users.service";
+import bookService from "../services/books.service";
 
 
 const Library = () => {
     const [books, setBooks] = useState([]);
+    const [bookForAddOrEdit, setBookForAddOrEdit] = useState({
+        bookId : "",
+        isbn : "",
+        author : "",
+        genre : "",
+        title : ""
+    });
+    const [bookTempTitle, setBookTempTitle] = useState("")
+    const [show, setShow] = useState(false);
+    const [authorErr, setAuthorErr] = useState("Cannot be empty");
+    const [titleErr, setTitleErr] = useState("Cannot be empty");
+    const [genreErr, setGenreErr] = useState("Cannot be empty");
+    const [isbnErr, setIsbnErr] = useState("Invalid ISBN");
 
     const dispatch = useDispatch();
     const store = useSelector(state => state)
 
     const history = useHistory();
-
+    const handleClose = () => {
+        setBookTempTitle("")
+        setShow(false);
+        setBookForAddOrEdit({
+            bookId : "",
+            isbn : "",
+            author : "",
+            genre : "",
+            title : ""
+        })
+        setAuthorErr("Cannot be empty")
+        setTitleErr("Cannot be empty")
+        setGenreErr("Cannot be empty")
+        setIsbnErr("Cannot be empty")
+    }
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         getBooks()
@@ -47,6 +79,84 @@ const Library = () => {
             .catch(err => {
                 toastService.show("error", "Error")
             })
+    }
+
+    const addOrEditBook = (book = null) => {
+        if (book != null) {
+            setBookTempTitle(book.title)
+            setBookForAddOrEdit(book)
+            setAuthorErr("")
+            setGenreErr("")
+            setTitleErr("")
+            setIsbnErr("")
+        }
+        setShow(true)
+    }
+
+    const handleInputChange = (event) => {
+        setBookForAddOrEdit({
+            ...bookForAddOrEdit,
+            [event.target.name]: event.target.value
+        })
+        validationErrorMessage(event);
+    }
+
+    const validationErrorMessage = (event) => {
+        const { name } = event.target;
+
+        switch (name) {
+            case 'isbn':
+                setIsbnErr(checkIsbn(bookForAddOrEdit.isbn) ? 'Invalid ISBN' : '')
+                break;
+            case 'title':
+                setTitleErr( bookForAddOrEdit.title !== "" ? '' : 'Cannot be empty')
+                break;
+            case 'author':
+                setAuthorErr( bookForAddOrEdit.author !== "" ? '' : 'Cannot be empty')
+                break;
+            case 'genre':
+                setGenreErr( bookForAddOrEdit.genre !== "" ? '' : 'Cannot be empty')
+                break;
+        }
+    }
+
+    const checkIsbn = (isbn) => {
+        return false
+    }
+
+    async function submitForm (event) {
+        event.preventDefault();
+        const errors = ['author','title', 'isbn', 'genre'];
+        if (validateForm(errors)) {
+            await sendParams()
+        } else {
+            console.log('Invalid Form')
+        }
+    }
+
+    function validateForm(errors) {
+        let valid = true;
+        for(const Error of errors) {
+            validationErrorMessage(createTarget(Error));
+        }
+        if(authorErr !== "" ||  genreErr !== "" || titleErr !== "" || isbnErr !== "")
+            return !valid;
+        return valid;
+    }
+
+    function createTarget (error) {
+        return {target : {value : error, name : error}}
+    }
+
+    async function sendParams() {
+        const response = bookForAddOrEdit.bookId === "" ? await bookService.createBook(bookForAddOrEdit) : await booksService.updateBook(bookForAddOrEdit);
+        if (response.status === 200) {
+            toastService.show("success", "Successfully updated!Please log-in.")
+            handleClose()
+            getBooks()
+        } else {
+            toastService.show("error", "Error! Try again")
+        }
     }
 
     return (
@@ -81,7 +191,7 @@ const Library = () => {
                                 <td>{book.title}</td>
                                 <td>{book.author}</td>
                                 <td>{book.genre}</td>
-                                <td><Button variant="link" style={{color: 'black'}} >Edit</Button>
+                                <td><Button variant="link" style={{color: 'black'}} onClick={() => addOrEditBook(book)}>Edit</Button>
                                 <Button variant="link" style={{color: 'black'}} onClick={() => deleteBook(book)}>Delete</Button></td>
                             </tr>
                         )
@@ -89,9 +199,69 @@ const Library = () => {
                     </tbody>
                 </Table>
 
-                <Button variant="secondary">Add</Button>
+                <Button variant="secondary" onClick={() => addOrEditBook()}>Add</Button>
             </div>
             <Footer/>
+
+
+            <Modal
+                show={show}
+                onHide={handleClose}
+            >
+                <Modal.Header>
+                    <Modal.Title>{bookForAddOrEdit.bookId !== "" ? <span>Edit {bookTempTitle}</span> : <span>Add new book</span>}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="row" style={{marginTop: '1rem'}}>
+                        <label  className="col-sm-2 col-form-label">ISBN *</label>
+                        <div className="col-sm-6 mb-2">
+                            <input     type="text" value={bookForAddOrEdit.isbn} name="isbn" placeholder="ISBN" onChange={(e) => handleInputChange(e) }  className="form-control" />
+                            {isbnErr.length > 0 && <span className="text-danger">{isbnErr}</span>}
+
+                        </div>
+                        <div className="col-sm-4">
+                        </div>
+                    </div>
+                    <div className="row" style={{marginTop: '1rem'}}>
+                        <label className="col-sm-2 col-form-label">Title *</label>
+                        <div className="col-sm-6 mb-2">
+                            <FormControl name="title" type="text" placeholder="Title"  value={bookForAddOrEdit.title} onChange={(e) => handleInputChange(e) } />
+                            {titleErr.length > 0 &&  <span className="text-danger">{titleErr}</span>}
+                        </div>
+                        <div className="col-sm-4">
+                        </div>
+                    </div>
+
+                    <div className="row" style={{marginTop: '1rem'}}>
+                        <label  className="col-sm-2 col-form-label">Author *</label>
+                        <div className="col-sm-6 mb-2">
+                            <FormControl name="author" type="text" placeholder="Author" value={bookForAddOrEdit.author} onChange={(e) => handleInputChange(e) }  />
+                            {authorErr.length > 0 &&  <span className="text-danger">{authorErr}</span>}
+                        </div>
+                        <div className="col-sm-4">
+                        </div>
+                    </div>
+
+                    <div className="row" style={{marginTop: '1rem'}}>
+                        <label  className="col-sm-2 col-form-label">Genre *</label>
+                        <div className="col-sm-6 mb-2">
+                            <FormControl name="genre" type="genre" placeholder="Genre" value={bookForAddOrEdit.genre} onChange={(e) => handleInputChange(e) }  />
+                            {genreErr.length > 0 &&  <span className="text-danger">{genreErr}</span>}
+                        </div>
+                        <div className="col-sm-4">
+                        </div>
+                    </div>
+
+
+                    <div className="row" style={{marginTop: '1rem'}}>
+                        <div className="col-sm-5 mb-2">
+                        </div>
+                        <div className="col-sm-4">
+                            <Button variant="success" onClick={submitForm}>Confirm</Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     )
 }
