@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {userActions} from "../store/actions/user.actions";
 import {useHistory} from "react-router-dom";
 import bookService from "../services/books.service";
+import ISBN from "isbn-verify";
 
 
 const Library = () => {
@@ -96,37 +97,37 @@ const Library = () => {
         })
     }
 
-    const isISBN13 = (str) =>{
-        let sum, digit, check, i;
-
-        str = str.replace(/[^0-9X]/gi, '');
-
-        if (str.length !== 13) {
-            return false;
-        }
-
-        if (str.length === 13) {
-            sum = 0;
-            for (i = 0; i < 12; i++) {
-                digit = parseInt(str[i]);
-                if (i % 2 === 1) {
-                    sum += 3*digit;
-                } else {
-                    sum += digit;
-                }
-            }
-            check = (10 - (sum % 10)) % 10;
-            return (check === str[str.length-1]);
-        }
-
-    }
+    // const isISBN13 = (str) =>{
+    //     let sum, digit, check, i;
+    //
+    //     str = str.replace(/[^0-9X]/gi, '');
+    //
+    //     if (str.length !== 13) {
+    //         return false;
+    //     }
+    //
+    //     if (str.length === 13) {
+    //         sum = 0;
+    //         for (i = 0; i < 12; i++) {
+    //             digit = parseInt(str[i]);
+    //             if (i % 2 === 1) {
+    //                 sum += 3*digit;
+    //             } else {
+    //                 sum += digit;
+    //             }
+    //         }
+    //         check = (10 - (sum % 10)) % 10;
+    //         return (check === str[str.length-1]);
+    //     }
+    //
+    // }
 
     const validationErrorMessage = (event) => {
         const { name } = event.target;
 
         switch (name) {
             case 'isbn':
-                setIsbnErr(checkIsbn() ? '' : 'Invalid ISBN')
+                checkIsbnAPI();
                 break;
             case 'title':
                 setTitleErr( bookForAddOrEdit.title !== "" ? '' : 'Cannot be empty')
@@ -140,9 +141,22 @@ const Library = () => {
         }
     }
 
-    const checkIsbn = () => {
-        const ISBN = require('isbn-verify');
-        return ISBN.Verify( bookForAddOrEdit.isbn);
+    // const checkIsbn = () => {
+    //     const ISBN = require('isbn-verify');
+    //     return ISBN.Verify( bookForAddOrEdit.isbn);
+    // }
+
+    const checkIsbnAPI = () => {
+        let isbn = require('node-isbn');
+        isbn.resolve(bookForAddOrEdit.isbn, function (err, book) {
+            if (err) {
+                console.log('Book not found', err);
+                setIsbnErr('Invalid ISBN')
+            } else {
+                console.log('Book found %j', book);
+                setIsbnErr('');
+            }
+        });
     }
 
     const submitForm = async (event) => {
