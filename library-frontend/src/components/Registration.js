@@ -30,7 +30,7 @@ const Registration = () => {
         setPasswordErr(checkPassword(password) ? 'Password must contains at least 8 characters (lowercase letter, capital letter, number and special character) or not be a common password!' : '')
     }, [username,rePassword,password])
 
-    async function submitForm (event) {
+    const submitForm = async (event) => {
         event.preventDefault();
         const errors = ['password','rePassword', 'username'];
         if (validateForm(errors)) {
@@ -40,7 +40,7 @@ const Registration = () => {
         }
     }
 
-    function validateForm(errors) {
+    const validateForm = (errors) => {
         let valid = true;
         for(const Error of errors) {
             validationErrorMessage(createTarget(Error));
@@ -50,11 +50,11 @@ const Registration = () => {
         return valid;
     }
 
-    function createTarget (error) {
+    const createTarget = (error) => {
         return {target : {value : error, name : error}}
     }
 
-    async function sendParams() {
+    const sendParams = async () => {
         const response = await userService.registerUser({
             username: username,
             password: password
@@ -86,10 +86,10 @@ const Registration = () => {
                 setUsername(target.value);
                 break;
         }
-        validationErrorMessage(event);
+        //validationErrorMessage(event);
     }
 
-    function validationErrorMessage(event) {
+    const validationErrorMessage = (event) => {
         const { name } = event.target;
 
         switch (name) {
@@ -110,29 +110,11 @@ const Registration = () => {
         }
     }
 
-    function validationErrorMessageBlur(event) {
-        const { name } = event.target;
-
-        switch (name) {
-            case 'password':
-                setPasswordErr(checkPassword(password) ? 'Password must contains at least 8 characters (lowercase letter, capital letter, number and special character) or not be a common password!' : '')
-                break;
-            case 'rePassword':
-                setRePasswordErr( isValidRepeatedPassword(rePassword) ? '' : 'This password must match the previous!')
-                break;
-            case 'username':
-                setUsernameErr( isUsernameValid(username) ? '' : 'Enter username')
-                break;
-            default:
-                break;
-        }
-    }
-
-    function isUsernameValid(value) {
+    const isUsernameValid = (value) => {
         return /^[a-z0-9_.]+$/.test(value);
     }
 
-    function checkPassword (password) {
+    const checkPassword =  (password) => {
         console.log("Checking")
         if(/^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password)){
             setPasswordStrength(password);
@@ -143,7 +125,7 @@ const Registration = () => {
         }
     }
 
-    function isValidRepeatedPassword (value)  {
+    const isValidRepeatedPassword = (value) =>  {
         return password === rePassword;
     }
     return (
@@ -151,7 +133,7 @@ const Registration = () => {
             <div className="row" style={{marginTop: '1rem'}}>
                 <label  className="col-sm-2 col-form-label">Username *</label>
                 <div className="col-sm-6 mb-2">
-                    <input  disabled = {(disabled)? "disabled" : ""}   type="text" value={username} name="username" onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessageBlur} className="form-control" id="username" />
+                    <input  disabled = {(disabled)? "disabled" : ""}   type="text" value={username} name="username" onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage} className="form-control" id="username" />
                     {usernameErr.length > 0 && <span className="text-danger">{usernameErr}</span>}
 
                 </div>
@@ -161,7 +143,7 @@ const Registration = () => {
             <div className="row" style={{marginTop: '1rem'}}>
                 <label className="col-sm-2 col-form-label">Password *</label>
                 <div className="col-sm-6 mb-2">
-                    <FormControl disabled = {(disabled)? "disabled" : ""}  name="password" type="password" placeholder="Password"  value={password} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessageBlur}/>
+                    <FormControl disabled = {(disabled)? "disabled" : ""}  name="password" type="password" placeholder="Password"  value={password} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage}/>
                     {passwordErr.length > 0 &&  <span className="text-danger">{passwordErr}</span>}
                     <PasswordStrengthBar password={passwordStrength} />
                 </div>
@@ -172,7 +154,7 @@ const Registration = () => {
             <div className="row" style={{marginTop: '1rem'}}>
                 <label  className="col-sm-2 col-form-label">Repeat password *</label>
                 <div className="col-sm-6 mb-2">
-                    <FormControl  disabled = {(disabled)? "disabled" : ""}  name="rePassword" type="password" placeholder="Repeat new Password" value={rePassword} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessageBlur} />
+                    <FormControl  disabled = {(disabled)? "disabled" : ""}  name="rePassword" type="password" placeholder="Repeat new Password" value={rePassword} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage} />
                     {rePasswordErr.length > 0 &&  <span className="text-danger">{rePasswordErr}</span>}
 
                 </div>

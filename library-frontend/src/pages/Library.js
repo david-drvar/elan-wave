@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Footer from "../components/Footer";
 import {Button, FormControl, Modal, Table} from "react-bootstrap";
-import async from "async";
 import booksService from "../services/books.service";
 import toastService from "../services/toast.service";
 import {useDispatch, useSelector} from "react-redux";
 import {userActions} from "../store/actions/user.actions";
 import {useHistory} from "react-router-dom";
-import Registration from "../components/Registration";
-import PasswordStrengthBar from "react-password-strength-bar";
-import userService from "../services/users.service";
 import bookService from "../services/books.service";
 
 
@@ -98,7 +94,31 @@ const Library = () => {
             ...bookForAddOrEdit,
             [event.target.name]: event.target.value
         })
-        validationErrorMessage(event);
+    }
+
+    const isISBN13 = (str) =>{
+        let sum, digit, check, i;
+
+        str = str.replace(/[^0-9X]/gi, '');
+
+        if (str.length !== 13) {
+            return false;
+        }
+
+        if (str.length === 13) {
+            sum = 0;
+            for (i = 0; i < 12; i++) {
+                digit = parseInt(str[i]);
+                if (i % 2 === 1) {
+                    sum += 3*digit;
+                } else {
+                    sum += digit;
+                }
+            }
+            check = (10 - (sum % 10)) % 10;
+            return (check === str[str.length-1]);
+        }
+
     }
 
     const validationErrorMessage = (event) => {
@@ -106,7 +126,7 @@ const Library = () => {
 
         switch (name) {
             case 'isbn':
-                setIsbnErr(checkIsbn(bookForAddOrEdit.isbn) ? 'Invalid ISBN' : '')
+                setIsbnErr(checkIsbn() ? '' : 'Invalid ISBN')
                 break;
             case 'title':
                 setTitleErr( bookForAddOrEdit.title !== "" ? '' : 'Cannot be empty')
@@ -120,11 +140,12 @@ const Library = () => {
         }
     }
 
-    const checkIsbn = (isbn) => {
-        return false
+    const checkIsbn = () => {
+        const ISBN = require('isbn-verify');
+        return ISBN.Verify( bookForAddOrEdit.isbn);
     }
 
-    async function submitForm (event) {
+    const submitForm = async (event) => {
         event.preventDefault();
         const errors = ['author','title', 'isbn', 'genre'];
         if (validateForm(errors)) {
@@ -134,7 +155,7 @@ const Library = () => {
         }
     }
 
-    function validateForm(errors) {
+    const validateForm = (errors) => {
         let valid = true;
         for(const Error of errors) {
             validationErrorMessage(createTarget(Error));
@@ -144,11 +165,11 @@ const Library = () => {
         return valid;
     }
 
-    function createTarget (error) {
+    const createTarget =  (error) => {
         return {target : {value : error, name : error}}
     }
 
-    async function sendParams() {
+    const sendParams = async () => {
         const response = bookForAddOrEdit.bookId === "" ? await bookService.createBook(bookForAddOrEdit) : await booksService.updateBook(bookForAddOrEdit);
         if (response.status === 200) {
             toastService.show("success", "Successfully updated!Please log-in.")
@@ -215,7 +236,7 @@ const Library = () => {
                     <div className="row" style={{marginTop: '1rem'}}>
                         <label  className="col-sm-2 col-form-label">ISBN *</label>
                         <div className="col-sm-6 mb-2">
-                            <input     type="text" value={bookForAddOrEdit.isbn} name="isbn" placeholder="ISBN" onChange={(e) => handleInputChange(e) }  className="form-control" />
+                            <input     type="text" value={bookForAddOrEdit.isbn} name="isbn" placeholder="ISBN" onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage}  className="form-control" />
                             {isbnErr.length > 0 && <span className="text-danger">{isbnErr}</span>}
 
                         </div>
@@ -225,7 +246,7 @@ const Library = () => {
                     <div className="row" style={{marginTop: '1rem'}}>
                         <label className="col-sm-2 col-form-label">Title *</label>
                         <div className="col-sm-6 mb-2">
-                            <FormControl name="title" type="text" placeholder="Title"  value={bookForAddOrEdit.title} onChange={(e) => handleInputChange(e) } />
+                            <FormControl name="title" type="text" placeholder="Title"  value={bookForAddOrEdit.title} onChange={(e) => handleInputChange(e) }  onBlur={validationErrorMessage}/>
                             {titleErr.length > 0 &&  <span className="text-danger">{titleErr}</span>}
                         </div>
                         <div className="col-sm-4">
@@ -235,7 +256,7 @@ const Library = () => {
                     <div className="row" style={{marginTop: '1rem'}}>
                         <label  className="col-sm-2 col-form-label">Author *</label>
                         <div className="col-sm-6 mb-2">
-                            <FormControl name="author" type="text" placeholder="Author" value={bookForAddOrEdit.author} onChange={(e) => handleInputChange(e) }  />
+                            <FormControl name="author" type="text" placeholder="Author" value={bookForAddOrEdit.author} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage} />
                             {authorErr.length > 0 &&  <span className="text-danger">{authorErr}</span>}
                         </div>
                         <div className="col-sm-4">
@@ -245,7 +266,7 @@ const Library = () => {
                     <div className="row" style={{marginTop: '1rem'}}>
                         <label  className="col-sm-2 col-form-label">Genre *</label>
                         <div className="col-sm-6 mb-2">
-                            <FormControl name="genre" type="genre" placeholder="Genre" value={bookForAddOrEdit.genre} onChange={(e) => handleInputChange(e) }  />
+                            <FormControl name="genre" type="genre" placeholder="Genre" value={bookForAddOrEdit.genre} onChange={(e) => handleInputChange(e) } onBlur={validationErrorMessage} />
                             {genreErr.length > 0 &&  <span className="text-danger">{genreErr}</span>}
                         </div>
                         <div className="col-sm-4">

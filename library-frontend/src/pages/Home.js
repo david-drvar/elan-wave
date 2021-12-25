@@ -7,7 +7,6 @@ import {useHistory} from "react-router-dom";
 import {toast} from "react-toastify";
 import Registration from "../components/Registration";
 import Footer from "../components/Footer";
-import authenticationService from "../services/authentification.service";
 import {userActions} from "../store/actions/user.actions";
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -25,7 +24,7 @@ const Home = () =>  {
     const handleShow = () => setShow(true);
 
     const handleLogin = async () => {
-        const response = await authenticationService.login({
+        const response = await userService.login({
             username: username,
             password: password
         })

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import authentificationService from "../services/authentification.service";
 import {useSelector} from "react-redux";
 
 const ProtectedRoute = ({ component: Component, role, ...rest }) => {
@@ -15,7 +14,7 @@ const ProtectedRoute = ({ component: Component, role, ...rest }) => {
                 else {
                     return <Redirect to={
                         {
-                            pathname: '/unauthorized',
+                            pathname: '/',
                             state: {
                                 from: props.location
                             }
