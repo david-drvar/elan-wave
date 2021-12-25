@@ -30,7 +30,7 @@ namespace DataAccessLayer
 
         public IEnumerable<User> GetAll()
         {
-            return _myDbContext.User;
+            return _myDbContext.User.Where(user =>  user.IsDeleted == false);
         }
 
         public User GetById(int Id)
@@ -40,7 +40,7 @@ namespace DataAccessLayer
 
         public User GetByUsernameAndPassword(UsernamePasswordDTO dto)
         {
-            User user =  _myDbContext.User.Where(user => user.Username == dto.Username && user.Password == dto.Password).FirstOrDefault();
+            User user =  _myDbContext.User.Where(user => user.Username == dto.Username && user.Password == dto.Password && user.IsDeleted == false).FirstOrDefault();
             if (user == null)
                 throw new Exception("User not found!");
             return user;

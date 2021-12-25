@@ -2,6 +2,7 @@
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DataAccessLayer
@@ -25,7 +26,7 @@ namespace DataAccessLayer
 
         public IEnumerable<Book> GetAll()
         {
-            return _myDbContext.Book;
+            return _myDbContext.Book.Where(book => book.IsDeleted == false);
         }
 
         public Book GetById(int Id)
