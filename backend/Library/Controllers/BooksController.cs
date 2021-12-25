@@ -54,8 +54,8 @@ namespace Library.Controllers
             return Ok(bookService.Insert(book));
         }
 
-        // DELETE: api/Books/5
-        [HttpDelete("{id}")]
+        // DELETE: api/Books
+        [HttpDelete]
         public IActionResult DeleteBook([FromBody] Book book)
         {
             return Ok(bookService.Delete(book));

@@ -14,6 +14,18 @@ class BookService extends RootService {
         })
         return response
     }
+
+    async deleteBook(data) {
+        const response = this.apiClient.delete('', {
+            data : data
+        }).then(res => {
+            return res
+        }).catch(err => {
+            console.error(err)
+            return err
+        })
+        return response
+    }
 }
 
 const bookService = new BookService()

@@ -20,9 +20,9 @@ class UserService extends RootService {
     }
 
     async registerUser(data) {
-        const {username, password,userAccountID,isDeleted} = data
+        const {username, password} = data
         const response = this.apiClient.post('', {
-            username, password,userAccountID,isDeleted
+            username, password
         }).then(res => {
             return res
         }).catch(err => {

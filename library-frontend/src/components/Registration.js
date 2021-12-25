@@ -4,6 +4,8 @@ import PasswordStrengthBar from "react-password-strength-bar";
 import {useHistory} from "react-router-dom";
 import userService from "../services/users.service";
 import toastService from "../services/toast.service";
+import {useDispatch, useSelector} from "react-redux";
+import {userActions} from "../store/actions/user.actions";
 
 
 const Registration = () => {
@@ -15,6 +17,9 @@ const Registration = () => {
     const [passwordErr, setPasswordErr] = useState("Enter password");
     const [rePasswordErr, setRePasswordErr] = useState("Repeat password");
     const [disabled, setDisabled] = useState(false);
+
+    const dispatch = useDispatch();
+    const store = useSelector(state => state)
 
     const history = useHistory();
 
@@ -56,14 +61,17 @@ const Registration = () => {
 
         const response = await userService.registerUser({
             username: username,
-            password: password,
-            userAccountID :"temp",
-            isDeleted : false
+            password: password
         })
         if (response.status === 200) {
             toastService.show("success", "Successfully registered!Please log-in.")
             setDisabled(!disabled);
-            //todo dispatch store
+            //todo dispatch
+            dispatch(userActions.loginRequest({
+                jwt: response.data.token,
+                id: response.data.id,
+                username: response.data.username
+            }));
             history.push({pathname: '/library'})
         } else {
             toastService.show("error", "Username must be unique! Try again")

@@ -38,6 +38,17 @@ const Library = () => {
         history.push({pathname: '/'})
     }
 
+    const deleteBook = (book) => {
+        booksService.deleteBook(book)
+            .then(response => {
+                if(response.status === 200)
+                    getBooks();
+            })
+            .catch(err => {
+                toastService.show("error", "Error")
+            })
+    }
+
     return (
         <div>
             <div style={{backgroundColor : "#D6DBDF"}}>
@@ -71,7 +82,7 @@ const Library = () => {
                                 <td>{book.author}</td>
                                 <td>{book.genre}</td>
                                 <td><Button variant="link" style={{color: 'black'}} >Edit</Button>
-                                <Button variant="link" style={{color: 'black'}} >Delete</Button></td>
+                                <Button variant="link" style={{color: 'black'}} onClick={() => deleteBook(book)}>Delete</Button></td>
                             </tr>
                         )
                     })}

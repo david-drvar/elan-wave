@@ -9,6 +9,7 @@ using DataAccessLayer;
 using Models;
 using BusinessLogicContracts;
 using Models.DTOs;
+using Library.Helpers;
 
 namespace Library.Controllers
 {
@@ -27,7 +28,6 @@ namespace Library.Controllers
         [HttpGet]
         public IActionResult GetUser()
         {
-            userService.Insert(new Models.User("bla", "", "", false));
             return Ok(userService.GetAll());
         }
 
@@ -36,7 +36,6 @@ namespace Library.Controllers
         public IActionResult GetUser(int id)
         {
             return Ok(userService.GetById(id));
-
         }
 
         // PUT: api/Users/5
@@ -54,13 +53,15 @@ namespace Library.Controllers
         [HttpPost]
         public IActionResult PostUser([FromBody] UsernamePasswordDTO dto)
         {
-            return Ok(userService.Insert(new Models.User("", dto.Username, dto.Password, false)));
+            User user = userService.Insert(new Models.User("", dto.Username, dto.Password, false));
+            return Ok(new { Token = JwtTokenHelper.GenerateJwtToken(user), Username = dto.Username, Id = user.UserAccountID });
         }
 
-        [HttpPost]
-        public IActionResult LoginUser([FromBody] UsernamePasswordDTO dto)
+        [HttpPost, Route("login")]
+        public IActionResult Login([FromBody] UsernamePasswordDTO loginDTO)
         {
-            return Ok(userService.Insert(new Models.User("", dto.Username, dto.Password, false)));
+            var user = userService.GetByUsernameAndPassword(loginDTO);
+            return Ok(new { Token = JwtTokenHelper.GenerateJwtToken(user), Username = loginDTO.Username, Id = user.UserAccountID });
         }
 
         // DELETE: api/Users/5
