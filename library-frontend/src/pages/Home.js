@@ -42,7 +42,7 @@ const Home = () =>  {
             }));
             history.push({pathname: '/library'})
         } else {
-            toastService.show("error", "Username must be unique! Try again")
+            toastService.show("error", "Wrong login data")
         }
     }
 
