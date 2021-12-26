@@ -30,6 +30,15 @@ class UserService extends RootService {
         })
         return response
     }
+
+    async isUsernameUnique(username) {
+        const response = this.apiClient.post('is-username-unique/' + username).then(res => {
+            return res
+        }).catch(err => {
+            return err
+        })
+        return response
+    }
 }
 
 const userService = new UserService()

@@ -11,6 +11,6 @@ namespace DataAccessContracts
         public User FindByUsername(string username);
 
         public User GetByUsernameAndPassword(UsernamePasswordDTO dto);
-
+        public bool IsUsernameUnique(string username);
     }
 }

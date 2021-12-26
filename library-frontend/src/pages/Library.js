@@ -198,9 +198,15 @@ const Library = () => {
         <div>
             <div style={{backgroundColor : "#D6DBDF"}}>
                 <br/><br/>
-                <h2>Elan<span style={{color : "#E67E22"}}>Wave</span> bookstore</h2>
-                <p>Hello, username!</p>
-                <a style={{color : "blue",textDecoration: "underline"}} onClick={handleSignOut}>Sign out</a>
+                <div style={{float : "right", marginRight : "40px"}}>
+                    Hello, {store.user.username}!
+                    <br/>
+                    <a style={{color : "blue",textDecoration: "underline"}} onClick={handleSignOut}>Sign out</a>
+                </div>
+                <div style={{marginLeft : "40px"}}>
+                    <h2>Elan<span style={{color : "#E67E22"}}>Wave</span> bookstore</h2>
+                </div>
+                
                 <br/>
                 <hr/>
             </div>

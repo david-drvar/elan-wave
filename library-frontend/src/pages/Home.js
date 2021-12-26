@@ -22,6 +22,10 @@ const Home = () =>  {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    
+    useEffect(() => {
+        document.title = "ElanWave library"
+    }, [])
 
     const handleLogin = async () => {
         const response = await userService.login({
@@ -45,28 +49,34 @@ const Home = () =>  {
         <div>
             <div style={{backgroundColor : "#D6DBDF"}}>
                 <br/><br/>
-                <input type={"text"} placeholder={"username"} onChange={(event => setUsername(event.target.value))} />
-                <input type={"password"} placeholder={"password"} style={{marginLeft : "10px"}} onChange={(event => setPassword(event.target.value))}/>
-                <Button variant="outline-secondary" style={{marginLeft : "10px"}} onClick={handleLogin}> Login</Button>
-                <p>
+                <div style={{float : "right", marginRight : "40px"}}>
+                    <input type={"text"} placeholder={"username"} onChange={(event => setUsername(event.target.value))} />
+                    <input type={"password"} placeholder={"password"} style={{marginLeft : "10px"}} onChange={(event => setPassword(event.target.value))}/>
+                    <Button variant="outline-secondary" style={{marginLeft : "10px"}} onClick={handleLogin}> Login</Button>
+                    <p>
                     You don't have an account? <span style={{marginLeft: "3px"}}/>
                     <a onClick={handleShow} style={{ textDecoration: "underline", color : "#95A5A6"}}>Sign up!</a>
-                </p>
-                <h2>Elan<span style={{color : "#E67E22"}}>Wave</span> bookstore</h2>
+                    </p>
+                </div>
+                
+                <div style={{marginLeft : "40px"}}>
+                    <h2>Elan<span style={{color : "#E67E22"}}>Wave</span> bookstore</h2>
+                </div>
                 <br/>
                 <hr/>
             </div>
             <br/>
-            <div>
+            <div style={{height : "600px"}}>
                 <p style={{textAlign: "left" , marginLeft : "200px", marginTop : "100px"}}>
                     Welcome to Elan<span style={{color : "#E67E22"}}>Wave</span> bookstore!
+                    <br/>
                     <br/>
                     Here you can browse our book database, add new books, edit or delete the old ones.
                     Basically, <br/> you can do anything!
                     <br/>
+                    <br/>
                     To browse the contents, please sign in, or sign up for an account if you don't have one.
                 </p>
-                <hr/>
             </div>
             <Footer/>
 

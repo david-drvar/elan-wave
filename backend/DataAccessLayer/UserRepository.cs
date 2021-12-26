@@ -54,6 +54,14 @@ namespace DataAccessLayer
             return User.Entity;
         }
 
+        public bool IsUsernameUnique(string username)
+        {
+            User user = _myDbContext.User.Where(user => user.Username == username && user.IsDeleted == false).FirstOrDefault();
+            if (user == null) //user does not exist
+                return true;
+            return false;
+        }
+
         public User Update(User entity)
         {
             _myDbContext.User.Update(entity);

@@ -49,6 +49,11 @@ namespace BusinessLogicLayer
             return userRepository.Insert(entity);
         }
 
+        public bool IsUsernameUnique(string username)
+        {
+            return userRepository.IsUsernameUnique(username);
+        }
+
         public User Update(User entity)
         {
             return userRepository.Update(entity);

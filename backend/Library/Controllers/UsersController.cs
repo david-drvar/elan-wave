@@ -57,6 +57,12 @@ namespace Library.Controllers
             return Ok(new { Token = JwtTokenHelper.GenerateJwtToken(user), Username = dto.Username, Id = user.UserAccountID });
         }
 
+        [HttpPost, Route("is-username-unique/{username}")]
+        public IActionResult IsUsernameUnique([FromRoute] string username)
+        {
+            return Ok(new { Status = userService.IsUsernameUnique(username)});
+        }
+
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] UsernamePasswordDTO loginDTO)
         {
