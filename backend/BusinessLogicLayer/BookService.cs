@@ -34,28 +34,12 @@ namespace BusinessLogicLayer
 
         public Book Insert(Book entity)
         {
-            if (!CheckISBN13(entity.ISBN)) 
-                throw new Exception();
-            
             return bookRepository.Insert(entity);
         }
 
         public Book Update(Book entity)
         {
             return bookRepository.Update(entity);
-        }
-
-        public bool CheckISBN13(string isbn)
-        {
-            isbn = isbn.Replace("-", "").Replace(" ", "");
-            if (isbn.Length != 13) return false;
-            int sum = 0;
-            foreach (var (index, digit) in isbn.Select((digit, index) => (index, digit)))
-            {
-                if (char.IsDigit(digit)) sum += (digit - '0') * (index % 2 == 0 ? 1 : 3);
-                else return false;
-            }
-            return sum % 10 == 0;
         }
         
     }

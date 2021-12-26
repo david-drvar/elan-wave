@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace DataAccessLayer
 {
@@ -52,7 +53,7 @@ namespace DataAccessLayer
 
         public User Insert(User entity)
         {
-            if (!validateUser(entity) || !IsUsernameUnique(entity.Username))
+            if (!ValidateUser(entity) || !IsUsernameUnique(entity.Username))
                 throw new Exception();
             entity.UserAccountID = Guid.NewGuid().ToString();
             entity.Password = HashPassword(entity.Password);
@@ -71,18 +72,30 @@ namespace DataAccessLayer
 
         public User Update(User entity)
         {
-            if (!validateUser(entity))
+            if (!ValidateUser(entity))
                 throw new Exception();
             _myDbContext.User.Update(entity);
             _myDbContext.SaveChanges();
             return entity;
         }
 
-        private bool validateUser(User user)
+        private bool ValidateUser(User user)
         {
-            if (user.Password == "" || user.Username == "")
+            if (!UsernameValid(user.Username) || !PasswordValid(user.Password))
                 return false;
             return true;
+        }
+
+        private bool UsernameValid(string username)
+        {
+            var regex = @"^[a-z0-9_.-]+$";
+            return Regex.Match(username, regex).Success;
+        }
+
+        private bool PasswordValid(string password)
+        {
+            var regex = @"^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$";
+            return Regex.Match(password, regex).Success;
         }
 
         private string HashPassword(string password)

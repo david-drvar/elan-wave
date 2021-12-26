@@ -36,7 +36,7 @@ namespace DataAccessLayer
 
         public Book Insert(Book entity)
         {
-            if (!validateBook(entity))
+            if (!ValidateBook(entity) || !CheckISBN13(entity.ISBN))
                 throw new Exception();
             entity.BookId = Guid.NewGuid().ToString();
             var Book = _myDbContext.Book.Add(entity);
@@ -46,18 +46,31 @@ namespace DataAccessLayer
 
         public Book Update(Book entity)
         {
-            if (!validateBook(entity))
+            if (!ValidateBook(entity) || !CheckISBN13(entity.ISBN))
                 throw new Exception();
             _myDbContext.Book.Update(entity);
             _myDbContext.SaveChanges();
             return entity;
         }
 
-        private bool validateBook(Book book)
+        private bool ValidateBook(Book book)
         {
             if (book.Title == "" || book.ISBN == "" || book.Genre == "" || book.Author == "")
                 return false;
             return true;
+        }
+
+        private bool CheckISBN13(string isbn)
+        {
+            isbn = isbn.Replace("-", "").Replace(" ", "");
+            if (isbn.Length != 13) return false;
+            int sum = 0;
+            foreach (var (index, digit) in isbn.Select((digit, index) => (index, digit)))
+            {
+                if (char.IsDigit(digit)) sum += (digit - '0') * (index % 2 == 0 ? 1 : 3);
+                else return false;
+            }
+            return sum % 10 == 0;
         }
     }
 }

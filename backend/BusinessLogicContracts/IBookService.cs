@@ -7,6 +7,5 @@ namespace BusinessLogicContracts
 {
     public interface IBookService : IService<Book, int>
     {
-        public bool CheckISBN13(string isbn);
     }
 }
