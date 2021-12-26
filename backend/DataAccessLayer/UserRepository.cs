@@ -48,6 +48,8 @@ namespace DataAccessLayer
 
         public User Insert(User entity)
         {
+            if (!validateUser(entity))
+                throw new Exception();
             entity.UserAccountID = Guid.NewGuid().ToString();
             var User = _myDbContext.User.Add(entity);
             _myDbContext.SaveChanges();
@@ -64,9 +66,18 @@ namespace DataAccessLayer
 
         public User Update(User entity)
         {
+            if (!validateUser(entity))
+                throw new Exception();
             _myDbContext.User.Update(entity);
             _myDbContext.SaveChanges();
             return entity;
+        }
+
+        private bool validateUser(User user)
+        {
+            if (user.Password == "" || user.Username == "")
+                return false;
+            return true;
         }
     }
 }

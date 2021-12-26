@@ -58,7 +58,7 @@ const Library = () => {
                     setBooks(response.data)
             })
             .catch(err => {
-                toastService.show("error", "Error")
+                toastService.show("Cannot retrieve books", "Error")
             })
     }
 
@@ -68,14 +68,15 @@ const Library = () => {
     }
 
     const deleteBook = (book) => {
-        booksService.deleteBook(book, store.user.jwt)
-            .then(response => {
-                if(response.status === 200)
-                    getBooks();
-            })
-            .catch(err => {
-                toastService.show("error", "Error")
-            })
+        if (window.confirm("Are you sure you want to delete book " + book.title))
+            booksService.deleteBook(book, store.user.jwt)
+                .then(response => {
+                    if(response.status === 200)
+                        getBooks();
+                })
+                .catch(err => {
+                    toastService.show("Error. Please try again", "Error")
+                })
     }
 
     const addOrEditBook = (book = null) => {
@@ -97,37 +98,12 @@ const Library = () => {
         })
     }
 
-    // const isISBN13 = (str) =>{
-    //     let sum, digit, check, i;
-    //
-    //     str = str.replace(/[^0-9X]/gi, '');
-    //
-    //     if (str.length !== 13) {
-    //         return false;
-    //     }
-    //
-    //     if (str.length === 13) {
-    //         sum = 0;
-    //         for (i = 0; i < 12; i++) {
-    //             digit = parseInt(str[i]);
-    //             if (i % 2 === 1) {
-    //                 sum += 3*digit;
-    //             } else {
-    //                 sum += digit;
-    //             }
-    //         }
-    //         check = (10 - (sum % 10)) % 10;
-    //         return (check === str[str.length-1]);
-    //     }
-    //
-    // }
-
     const validationErrorMessage = (event) => {
         const { name } = event.target;
 
         switch (name) {
             case 'isbn':
-                checkIsbnAPI();
+                checkISBNValid();
                 break;
             case 'title':
                 setTitleErr( bookForAddOrEdit.title !== "" ? '' : 'Cannot be empty')
@@ -141,12 +117,7 @@ const Library = () => {
         }
     }
 
-    // const checkIsbn = () => {
-    //     const ISBN = require('isbn-verify');
-    //     return ISBN.Verify( bookForAddOrEdit.isbn);
-    // }
-
-    const checkIsbnAPI = () => {
+    const checkISBNValid = () => {
         let isbn = require('node-isbn');
         isbn.resolve(bookForAddOrEdit.isbn, function (err, book) {
             if (err) {
@@ -186,7 +157,7 @@ const Library = () => {
     const sendParams = async () => {
         const response = bookForAddOrEdit.bookId === "" ? await bookService.createBook(bookForAddOrEdit, store.user.jwt) : await booksService.updateBook(bookForAddOrEdit, store.user.jwt);
         if (response.status === 200) {
-            toastService.show("success", "Successfully updated!Please log-in.")
+            toastService.show("success", "Successfully updated!")
             handleClose()
             getBooks()
         } else {

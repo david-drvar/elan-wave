@@ -24,14 +24,6 @@ const Registration = () => {
 
     const history = useHistory();
 
-
-    useEffect(() => {
-        setUsernameErr( isUsernameValid(username) ? '' : 'Enter username')
-        //setUsernameErr( isUsernameUnique() ? '' : 'Username must be unique')
-        setRePasswordErr( isValidRepeatedPassword(rePassword) ? '' : 'This password must match the previous!')
-        setPasswordErr(checkPassword(password) ? 'Password must contains at least 8 characters (lowercase letter, capital letter, number and special character) or not be a common password!' : '')
-    }, [username,rePassword,password])
-
     const submitForm = async (event) => {
         event.preventDefault();
         const errors = ['password','rePassword', 'username'];

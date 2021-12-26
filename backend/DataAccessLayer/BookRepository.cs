@@ -36,6 +36,8 @@ namespace DataAccessLayer
 
         public Book Insert(Book entity)
         {
+            if (!validateBook(entity))
+                throw new Exception();
             entity.BookId = Guid.NewGuid().ToString();
             var Book = _myDbContext.Book.Add(entity);
             _myDbContext.SaveChanges();
@@ -44,9 +46,18 @@ namespace DataAccessLayer
 
         public Book Update(Book entity)
         {
+            if (!validateBook(entity))
+                throw new Exception();
             _myDbContext.Book.Update(entity);
             _myDbContext.SaveChanges();
             return entity;
+        }
+
+        private bool validateBook(Book book)
+        {
+            if (book.Title == "" || book.ISBN == "" || book.Genre == "" || book.Author == "")
+                return false;
+            return true;
         }
     }
 }
