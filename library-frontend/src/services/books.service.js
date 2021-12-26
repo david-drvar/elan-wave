@@ -5,8 +5,10 @@ class BookService extends RootService {
         super("https://localhost:44319" + "/api/books")
     }
 
-    async getBooks() {
-        return this.apiClient.get('').then(res => {
+    async getBooks(jwt) {
+        const headers = this.setupHeaders(jwt);
+
+        return this.apiClient.get('', {headers}).then(res => {
             return res
         }).catch(err => {
             console.error(err)
@@ -14,9 +16,12 @@ class BookService extends RootService {
         })
     }
 
-    async deleteBook(data) {
+    async deleteBook(data, jwt) {
+        const headers = this.setupHeaders(jwt);
+
         return this.apiClient.delete('', {
-            data: data
+            data: data,
+            headers : headers
         }).then(res => {
             return res
         }).catch(err => {
@@ -25,7 +30,9 @@ class BookService extends RootService {
         })
     }
 
-    async createBook(data) {
+    async createBook(data, jwt) {
+        const headers = this.setupHeaders(jwt);
+
         return this.apiClient.post('', {
             Author: data.author,
             Title: data.title,
@@ -33,7 +40,7 @@ class BookService extends RootService {
             ISBN: data.isbn,
             BookId: "temp",
             IsDeleted: false
-        }).then(res => {
+        }, {headers}).then(res => {
             return res
         }).catch(err => {
             console.error(err)
@@ -41,7 +48,9 @@ class BookService extends RootService {
         })
     }
 
-    async updateBook(data) {
+    async updateBook(data, jwt) {
+        const headers = this.setupHeaders(jwt);
+
         return this.apiClient.put('', {
             Author: data.author,
             Title: data.title,
@@ -49,7 +58,7 @@ class BookService extends RootService {
             ISBN: data.isbn,
             BookId: data.bookId,
             IsDeleted: false
-        }).then(res => {
+        }, {headers}).then(res => {
             return res
         }).catch(err => {
             console.error(err)

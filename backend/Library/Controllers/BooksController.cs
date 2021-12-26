@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using Models;
 using BusinessLogicContracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBookService bookService;

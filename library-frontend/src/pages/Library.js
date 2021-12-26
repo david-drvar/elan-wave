@@ -48,11 +48,11 @@ const Library = () => {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        getBooks()
+        getBooks(store.user.jwt)
     }, []);
 
     const getBooks = async () => {
-        booksService.getBooks()
+        booksService.getBooks(store.user.jwt)
             .then(response => {
                 if(response.status === 200)
                     setBooks(response.data)
@@ -68,7 +68,7 @@ const Library = () => {
     }
 
     const deleteBook = (book) => {
-        booksService.deleteBook(book)
+        booksService.deleteBook(book, store.user.jwt)
             .then(response => {
                 if(response.status === 200)
                     getBooks();
@@ -184,7 +184,7 @@ const Library = () => {
     }
 
     const sendParams = async () => {
-        const response = bookForAddOrEdit.bookId === "" ? await bookService.createBook(bookForAddOrEdit) : await booksService.updateBook(bookForAddOrEdit);
+        const response = bookForAddOrEdit.bookId === "" ? await bookService.createBook(bookForAddOrEdit, store.user.jwt) : await booksService.updateBook(bookForAddOrEdit, store.user.jwt);
         if (response.status === 200) {
             toastService.show("success", "Successfully updated!Please log-in.")
             handleClose()

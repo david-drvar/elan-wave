@@ -6,6 +6,7 @@ import userService from "../services/users.service";
 import toastService from "../services/toast.service";
 import {useDispatch, useSelector} from "react-redux";
 import {userActions} from "../store/actions/user.actions";
+import authenticationService from '../services/authentication.service';
 
 
 const Registration = () => {
@@ -56,7 +57,7 @@ const Registration = () => {
     }
 
     const sendParams = async () => {
-        const response = await userService.registerUser({
+        const response = await authenticationService.registerUser({
             username: username,
             password: password
         })
@@ -110,11 +111,11 @@ const Registration = () => {
     }
 
     const isUsernameValid = (value) => {
-        return /^[a-z0-9_.]+$/.test(value);
+        return /^[a-z0-9_.-]+$/.test(value);
     }
 
     const isUsernameUnique =  async (username) => {
-        const response =  await userService.isUsernameUnique(username)
+        const response =  await userService.isUsernameUnique(username, store.user.jwt)
         console.log("response")
         console.log(response.data)
         

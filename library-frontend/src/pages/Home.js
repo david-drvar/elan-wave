@@ -9,6 +9,7 @@ import Registration from "../components/Registration";
 import Footer from "../components/Footer";
 import {userActions} from "../store/actions/user.actions";
 import { useDispatch, useSelector } from 'react-redux'
+import authenticationService from '../services/authentication.service';
 
 
 const Home = () =>  {
@@ -28,7 +29,7 @@ const Home = () =>  {
     }, [])
 
     const handleLogin = async () => {
-        const response = await userService.login({
+        const response = await authenticationService.login({
             username: username,
             password: password
         })
