@@ -37,10 +37,7 @@ namespace Library
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookService, BookService>();
 
-
-
             services.AddDbContext<MyDbContext>();
-            //services.AddRazorPages();
 
             services.AddCors(options =>
             {
